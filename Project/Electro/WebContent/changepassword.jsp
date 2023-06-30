@@ -40,11 +40,11 @@
 				<!-- row -->
 				<div class="row">
 
-                      <%
+                    <%
 				    if(request.getAttribute("msg")!=null){
 				    	out.println(request.getAttribute("msg"));
 				    }
-				      %>
+				    %>
 					<div class="col-md-7">
 							<div class="section-title">
 								<h3 class="title">Change Password</h3>

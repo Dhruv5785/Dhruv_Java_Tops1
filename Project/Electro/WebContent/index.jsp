@@ -68,7 +68,7 @@
 											<h3 class="product-name">
 												<a href="#"><%=p.getProd_name()%></a>
 											</h3>
-											<h4 class="product-price">Rs.<%=p.getProd_price()%></h4>
+											<h4 class="product-price">Rs. <%=p.getProd_price()%></h4>
 											<div class="product-rating">
 												<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
 													class="fa fa-star"></i> <i class="fa fa-star"></i> <i
@@ -76,11 +76,6 @@
 											</div>
 									<p class="product-model"><%=p.getProd_model()%></p>
 									<a href="Product_Details.jsp?pid=<%=p.getPid()%>"><input type="button" class="btn btn-primary" value="Details"></a>										
-										</div>
-										<div class="add-to-cart">
-											<button class="add-to-cart-btn">
-												<i class="fa fa-shopping-cart"></i> add to cart
-											</button>
 										</div>
 									</div>
 									<%

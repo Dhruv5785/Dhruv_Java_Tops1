@@ -1,12 +1,19 @@
+<%@page import="java.util.Random"%>
+<%@page import="com.dao.WishlistDao"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<%@ include file="header.jsp" %>
+<%@ include file="header.jsp"%>
+<%@page import="com.bean.Cart"%>
 <%@page import="com.bean.Product"%>
 <%@page import="com.controller.ProductController"%>
-<%@page import="com.dao.ProductDao"%>
-<%@page import="com.dao.WishlistDao"%>
 <%@page import="com.dao.CartDao"%>
+<%@page import="com.dao.ProductDao"%>
 <%@page import="java.util.List"%>
+
+<%
+ 	Random randomGenerator = new Random();
+	int randomInt = randomGenerator.nextInt(1000000);
+ %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,13 +26,21 @@
 
 </head>
 <body>
-	
+
 	<!-- SECTION -->
 	<div class="section">
 		<!-- container -->
 		<div class="container">
 			<!-- row -->
 			<div class="row">
+
+				<!-- section title -->
+				<div class="col-md-12">
+					<div class="section-title">
+						<h3 class="title">Cart</h3>
+					</div>
+				</div>
+				<!-- /section title -->
 
 				<!-- Products tab & slick -->
 				<div class="col-md-12">
@@ -34,95 +49,114 @@
 							<!-- tab -->
 							<div id="tab1" class="tab-pane active">
 								<div class="products-slick" data-nav="#slick-nav-1">
-								
-								<%
-								 int pid=Integer.parseInt(request.getParameter("pid"));     
-								 Product p=ProductDao.getProductsById(pid);
-                                %>
+
+									<%
+								     int net_price=0;
+								     List<Cart> list=CartDao.getCartByUser(u.getCno());
+								     for(Cart c: list)
+								     {
+								    	   net_price=net_price+c.getTotal_price();
+								    	   Product p=ProductDao.getProductsById(c.getPid());
+								    	  
+								    %>
 									<!-- product -->
 									<div class="product">
 										<div class="product-img">
 											<img src="Product_Images/<%=p.getProd_img()%>" alt="">
+											<div class="product-label">
+												<span class="sale">-30%</span> <span class="new">NEW</span>
+											</div>
 										</div>
 										<div class="product-body">
 											<p class="product-category"><%=p.getProd_category()%></p>
 											<h3 class="product-name">
 												<a href="#"><%=p.getProd_name()%></a>
 											</h3>
-											<h4 class="product-price">Rs. <%=p.getProd_price()%></h4>
-											<div class="product-rating">
-												<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-													class="fa fa-star"></i> <i class="fa fa-star"></i> <i
-													class="fa fa-star"></i>
-											</div>
-											<p class="product-details"><%=p.getProd_desc()%></p>
-											
-											<%
-											    if(session.getAttribute("u")!=null){
-											    	boolean flag=WishlistDao.checkWishlist(u.getCno(),p.getPid());
-											    	if(flag==false){
-											%>
-											  <a href="add_to_wishlist.jsp?pid=<%=p.getPid()%>&cno=<%=u.getCno()%>">
-											      <input type="submit" value="Add to wishlist" class="btn btn-primary">
-											  </a>
-											  <%
-											    	}
-											    	else
-											    	{										    		
-											  %>
-								          <a href="remove_from_wishlist.jsp?pid=<%=p.getPid()%>&cno=<%=u.getCno()%>">
-							              <input type="submit" value="Remove from wishlist" class="btn btn-danger">
-							              </a>
-											  <% 
-											    }
-											  }  	
-											    else {
-											  %>
-											
-											<a href="login.jsp">
-											<input type="submit" value="Buy Product" class="btn btn-danger">
+											<h4 class="product-price">
+												Rs.
+												<%=p.getProd_price()%></h4>
+											<p class="product-model"><%=p.getProd_model()%></p>
+
+											<div class="product-rating"></div>
+
+											<form action="CartController" name="changeqty" method="post">
+												<input type="hidden" name="cid" value="<%=c.getCid()%>">
+												<h3 class="product-name">
+													<b>Quantity:</b> <input type="number" min="1" max="10"
+														value="<%=c.getProd_qty()%>" name="prod_qty"
+														onchange="this.form.submit();">
+												</h3>
+											</form>
+
+											<div class="product-rating"></div>
+											<h3 class="product-name">Total Price:</h3>
+											<h4 class="product-price">
+												Rs.
+												<%=c.getTotal_price()%></h4>
+
+											<div class="product-rating"></div>
+
+											<a href="Product_Details.jsp?pid=<%=p.getPid()%>"> <input
+												type="button" class="btn btn-primary" value="Details">
 											</a>
-											
-											<%
-											    }
-											%>
 										</div>
-										
-								        <%
-								             if(session.getAttribute("u")!=null){
-								            	 boolean flag=CartDao.checkCart(u.getCno(),p.getPid());
-								            	 if(flag==false){
-								        %>
-								            		 <div class="add-to-cart">
-													    <a href="add_to_cart.jsp?cno=<%=u.getCno()%>&pid=<%=p.getPid()%>">
-														<button class="add-to-cart-btn">
-															<i class="fa fa-shopping-cart"></i> Add to Cart
-														</button>
-													   </a>
-													</div>
-													
+									</div>
 									<%
-								            	 }
-								            	 else{
-								    %>        		 
-								            
-								            <div class="add-to-cart">
-													    <a href="remove_from_cart.jsp?cno=<%=u.getCno()%>&pid=<%=p.getPid()%>">
-														<button class="add-to-cart-btn">
-															<i class="fa fa-shopping-cart"></i> Remove From Cart
-														</button>
-													   </a>
-													</div>
-						    	    <%         
-								            	 }
-								             }else{
-								    %>
-										
-								<%
-							          }
-								%>	    
-						    	    </div>
-									<!-- /product -->
+								       }
+									%>
+
+									<form method="post" action="pgRedirect.jsp">
+										<table border="1">
+											<tbody>
+												<tr>
+													<th>S.No</th>
+													<th>Label</th>
+													<th>Value</th>
+												</tr>
+												<tr>
+													<td>1</td>
+													<td><label>ORDER_ID::*</label></td>
+													<td><input id="ORDER_ID" tabindex="1" maxlength="20"
+														size="20" name="ORDER_ID" autocomplete="off"
+														value="ORDS_<%=randomInt%>"></td>
+												</tr>
+												<tr>
+													<td>2</td>
+													<td><label>CUSTID ::*</label></td>
+													<td><input id="CUST_ID" tabindex="2" maxlength="30"
+														size="12" name="CUST_ID" autocomplete="off"
+														value="CUST001"></td>
+												</tr>
+												<tr>
+													<td>3</td>
+													<td><label>INDUSTRY_TYPE_ID ::*</label></td>
+													<td><input id="INDUSTRY_TYPE_ID" tabindex="4"
+														maxlength="12" size="12" name="INDUSTRY_TYPE_ID"
+														autocomplete="off" value="Retail"></td>
+												</tr>
+												<tr>
+													<td>4</td>
+													<td><label>Channel ::*</label></td>
+													<td><input id="CHANNEL_ID" tabindex="4" maxlength="12"
+														size="12" name="CHANNEL_ID" autocomplete="off" value="WEB">
+													</td>
+												</tr>
+												<tr>
+													<td>5</td>
+													<td><label>txnAmount*</label></td>
+													<td><input title="TXN_AMOUNT" tabindex="10"
+														type="text" name="TXN_AMOUNT" value="<%=net_price%>">
+													</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td><input value="CheckOut" type="submit" onclick="" class="btn btn-danger"></td>
+												</tr>
+											</tbody>
+										</table>
+										* - Mandatory Fields
+									</form>
 								</div>
 								<div id="slick-nav-1" class="products-slick-nav"></div>
 							</div>
@@ -137,8 +171,7 @@
 		<!-- /container -->
 	</div>
 	<!-- /SECTION -->
-    <br><br>
-	 <!-- FOOTER -->
+	<!-- FOOTER -->
 	<footer id="footer">
 		<!-- top footer -->
 		<div class="section">
@@ -224,10 +257,7 @@
 						<span class="copyright"> <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 							Copyright &copy;<script>
 								document.write(new Date().getFullYear());
-							</script>
-							All rights reserved | This template is made with <i
-							class="fa fa-heart-o" aria-hidden="true"></i> by <a
-							href="https://colorlib.com" target="_blank">Colorlib</a> <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+							</script> All rights reserved
 						</span>
 					</div>
 				</div>

@@ -1,11 +1,12 @@
+<%@page import="com.dao.WishlistDao"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ include file="header.jsp" %>
+<%@page import="com.bean.Wishlist"%>
 <%@page import="com.bean.Product"%>
 <%@page import="com.controller.ProductController"%>
-<%@page import="com.dao.ProductDao"%>
 <%@page import="com.dao.WishlistDao"%>
-<%@page import="com.dao.CartDao"%>
+<%@page import="com.dao.ProductDao"%>
 <%@page import="java.util.List"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,6 +28,14 @@
 			<!-- row -->
 			<div class="row">
 
+				<!-- section title -->
+				<div class="col-md-12">
+					<div class="section-title">
+						<h3 class="title">Wishlist</h3>
+					</div>
+				</div>
+				<!-- /section title -->
+
 				<!-- Products tab & slick -->
 				<div class="col-md-12">
 					<div class="row">
@@ -36,92 +45,43 @@
 								<div class="products-slick" data-nav="#slick-nav-1">
 								
 								<%
-								 int pid=Integer.parseInt(request.getParameter("pid"));     
-								 Product p=ProductDao.getProductsById(pid);
-                                %>
+								     List<Wishlist> list=WishlistDao.getWishlistByUser(u.getCno());
+								     for(Wishlist w: list)
+								     {
+								    	   Product p=ProductDao.getProductsById(w.getPid());
+								    	   
+						    	%>
 									<!-- product -->
 									<div class="product">
 										<div class="product-img">
 											<img src="Product_Images/<%=p.getProd_img()%>" alt="">
+											<div class="product-label">
+												<span class="sale">-30%</span> <span class="new">NEW</span>
+											</div>
 										</div>
 										<div class="product-body">
 											<p class="product-category"><%=p.getProd_category()%></p>
 											<h3 class="product-name">
 												<a href="#"><%=p.getProd_name()%></a>
 											</h3>
-											<h4 class="product-price">Rs. <%=p.getProd_price()%></h4>
+											<h4 class="product-price">Rs.<%=p.getProd_price()%></h4>
 											<div class="product-rating">
 												<i class="fa fa-star"></i> <i class="fa fa-star"></i> <i
 													class="fa fa-star"></i> <i class="fa fa-star"></i> <i
 													class="fa fa-star"></i>
 											</div>
-											<p class="product-details"><%=p.getProd_desc()%></p>
-											
-											<%
-											    if(session.getAttribute("u")!=null){
-											    	boolean flag=WishlistDao.checkWishlist(u.getCno(),p.getPid());
-											    	if(flag==false){
-											%>
-											  <a href="add_to_wishlist.jsp?pid=<%=p.getPid()%>&cno=<%=u.getCno()%>">
-											      <input type="submit" value="Add to wishlist" class="btn btn-primary">
-											  </a>
-											  <%
-											    	}
-											    	else
-											    	{										    		
-											  %>
-								          <a href="remove_from_wishlist.jsp?pid=<%=p.getPid()%>&cno=<%=u.getCno()%>">
-							              <input type="submit" value="Remove from wishlist" class="btn btn-danger">
-							              </a>
-											  <% 
-											    }
-											  }  	
-											    else {
-											  %>
-											
-											<a href="login.jsp">
-											<input type="submit" value="Buy Product" class="btn btn-danger">
-											</a>
-											
-											<%
-											    }
-											%>
+									<p class="product-model"><%=p.getProd_model()%></p>
+									<a href="Product_Details.jsp?pid=<%=p.getPid()%>"><input type="button" class="btn btn-primary" value="Details"></a>										
 										</div>
-										
-								        <%
-								             if(session.getAttribute("u")!=null){
-								            	 boolean flag=CartDao.checkCart(u.getCno(),p.getPid());
-								            	 if(flag==false){
-								        %>
-								            		 <div class="add-to-cart">
-													    <a href="add_to_cart.jsp?cno=<%=u.getCno()%>&pid=<%=p.getPid()%>">
-														<button class="add-to-cart-btn">
-															<i class="fa fa-shopping-cart"></i> Add to Cart
-														</button>
-													   </a>
-													</div>
-													
+										<div class="add-to-cart">
+											<button class="add-to-cart-btn">
+												<i class="fa fa-shopping-cart"></i> add to cart
+											</button>
+										</div>
+									</div>
 									<%
-								            	 }
-								            	 else{
-								    %>        		 
-								            
-								            <div class="add-to-cart">
-													    <a href="remove_from_cart.jsp?cno=<%=u.getCno()%>&pid=<%=p.getPid()%>">
-														<button class="add-to-cart-btn">
-															<i class="fa fa-shopping-cart"></i> Remove From Cart
-														</button>
-													   </a>
-													</div>
-						    	    <%         
-								            	 }
-								             }else{
-								    %>
-										
-								<%
-							          }
-								%>	    
-						    	    </div>
+								       }
+									%>
 									<!-- /product -->
 								</div>
 								<div id="slick-nav-1" class="products-slick-nav"></div>
@@ -137,8 +97,7 @@
 		<!-- /container -->
 	</div>
 	<!-- /SECTION -->
-    <br><br>
-	 <!-- FOOTER -->
+    <!-- FOOTER -->
 	<footer id="footer">
 		<!-- top footer -->
 		<div class="section">

@@ -12,5 +12,7 @@
 	<classpathentry kind="lib" path="D:/Adv-Java/forgot_password/javax.activation.jar"/>
 	<classpathentry kind="lib" path="D:/Adv-Java/forgot_password/javax.mail.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v9.0"/>
+	<classpathentry kind="lib" path="D:/Adv-Java/Electro/Paytm_Web_Sample_Kit_Java-master/Java Kit 1.8/PaytmChecksum.jar"/>
+	<classpathentry kind="lib" path="D:/Adv-Java/Electro/Paytm_Web_Sample_Kit_Java-master/Sample Kit/paytm_java/WebContent/WEB-INF/lib/paytm-checksum-1.1.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
