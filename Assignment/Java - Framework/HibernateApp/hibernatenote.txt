@@ -1,0 +1,25 @@
+
+
+	Framework : In Java we have more than 1 frameworks
+
+		   e.g Hibernate,Spring,etc.
+==================================================================================
+
+	Hibernate Framework : The main aim of this framework is that it will replace 
+			      the JDBC.
+
+			    - The Bean class is also called as Persistent class, where as in JDBC
+			      it is called as POJO class.
+
+			    - In hibernate Bean Class, it is compulsory to have 1 minimum Integer 			      field, which will automatically created as a Primary Key for your
+			      Table.
+
+		   	    - The class which is going to connect with the table is called as 
+			      Persistent Class.
+				
+			    - And hence we have to create a mapping file for that.
+		
+
+
+
+		
